@@ -1,22 +1,23 @@
-"use client";
+'use client';
 
-import { useCart } from "@/app/cartContext";
-import Image from "next/image";
-import { FaPlus, FaMinus } from "react-icons/fa";
-import { AiOutlineDelete } from "react-icons/ai";
-import { useState, useEffect } from "react";
-import { getProductById } from "@/app/utils/api";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { FaPlus, FaMinus } from 'react-icons/fa';
+import { AiOutlineDelete } from 'react-icons/ai';
+import { useCart } from '@/app/cartContext';
+import FilterSection from '../filter/page';
+import { useRouter } from 'next/navigation';
+import { getProductById } from '@/app/utils/api';
+import Link from 'next/link';
+
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity,  } = useCart();
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
-
-
-  const getTotal = () =>
-    cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  
 
   const handleIncrement = (id: number) => {
     const item = cartItems.find((item) => item.id === id);
@@ -45,29 +46,29 @@ const Cart = () => {
           return {
             name: product.name,
             amount: product.price * 100,
-            currency: product.currency || "usd",
+            currency: product.currency || 'usd',
             quantity: item.quantity,
           };
         })
       );
 
-      const response = await fetch("/api/checkout_sessions", {
-        method: "POST",
+      const response = await fetch('/api/checkout_sessions', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ products }),
       });
 
       if (response.ok) {
         const { url } = await response.json();
-        router.push(url); 
+        router.push(url);
       } else {
         const error = await response.json();
-        console.error("Checkout Error:", error.message);
+        console.error('Checkout Error:', error.message);
       }
     } catch (error) {
-      console.error("Error during checkout:", error);
+      console.error('Error during checkout:', error);
     } finally {
       setLoading(false);
     }
@@ -75,90 +76,94 @@ const Cart = () => {
 
   return (
     <>
-     
-      <div className="flex justify-center flex-col  p-6 space-y-4 sm:p-10 dark:bg-gray-50 dark:text-gray-800">
-        <h2 className="text-4xl font-semibold">Your cart</h2>
+      <FilterSection
+        textTitle="Shopping Cart"
+        textNavigation="Home . Pages ."
+        pageName="Shopping Cart"
+        className="hidden"
+      />
+      <div className="p-6 sm:p-10  text-gray-800 min-h-screen">
         {cartItems.length === 0 ? (
-          <p className="text-center text-gray-500 h-[60dvh] flex justify-center items-center text-3xl font-bold">
-            Your cart is empty
-          </p>
+          <div className="flex justify-center items-center h-full">
+            <p className="text-2xl text-gray-500 font-medium">
+              Your cart is empty.
+            </p>
+          </div>
         ) : (
-          <ul className="flex flex-col divide-y dark:divide-gray-300">
-            {cartItems.map((item) => (
-              <li
-                key={item.id}
-                className="flex flex-col py-6 sm:flex-row sm:justify-between"
-              >
-                <div className="flex w-full space-x-2 sm:space-x-4">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={120}
-                    height={150}
-                    unoptimized
-                    className="flex-shrink-0 object-contain w-20 h-20 dark:border- rounded outline-none sm:w-32 sm:h-32 dark:bg-gray-500"
-                  />
-                  <div className="flex flex-col justify-between w-full pb-4">
-                    <div className="flex justify-between w-full pb-2 space-x-2">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-semibold leading-snug sm:pr-8">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm dark:text-gray-600">Classic</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-semibold">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex text-sm divide-x">
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="flex items-center px-2 py-1 pl-0 space-x-1 cursor-pointer"
-                      >
-                        <AiOutlineDelete size={20} className="bg-gray-900 text-white"/>
-                      </button>
-                      <button
-                        onClick={() => handleDecrement(item.id)}
-                        className="flex items-center px-2 py-1 space-x-1"
-                      >
-                        <FaMinus />
-                      </button>
-                      <button
-                        onClick={() => handleIncrement(item.id)}
-                        className="flex items-center px-2 py-1 space-x-1"
-                      >
-                        <FaPlus />
-                      </button>
+          <>
+            <ul className="space-y-4">
+              {cartItems.map((item) => (
+                <li key={item.id} className="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+                  <div className="flex items-center space-x-4">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={80}
+                      height={80}
+                      className="w-20 h-20 object-cover rounded"
+                    />
+                    <div>
+                      <h3 className="text-lg w-56 font-semibold text-gray-700">{item.name}</h3>
                     </div>
                   </div>
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={() => handleDecrement(item.id)}
+                      className="p-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-full"
+                    >
+                      <FaMinus />
+                    </button>
+                    <span className="text-lg font-medium">{item.quantity}</span>
+                    <button
+                      onClick={() => handleIncrement(item.id)}
+                      className="p-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-full"
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <p className="text-lg font-medium text-gray-800">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </p>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <AiOutlineDelete size={20} />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 bg-white p-6 rounded-lg shadow">
+              <div className="flex justify-between items-center">
+                <p className="text-lg font-medium">
+                  Total: <span className="text-blue-600">${cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}</span>
+                </p>
+                <div className="flex space-x-4">
+                <Link href='/shop'
+                >
+                   <button
+                    
+                    className="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    Go to shop
+                  </button>
+                </Link>
+                 
+                  <button
+                    onClick={handleCheckout}
+                    disabled={loading}
+                    className={`py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 ${
+                      loading ? 'opacity-70 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {loading ? 'Processing...' : 'Checkout'}
+                  </button>
                 </div>
-              </li>
-            ))}
-
-            <div className="flex items-center flex-wrap justify-between pt-2">
-              <button
-                className={`bg-Color py-2 px-6 text-white cursor-pointer hover:opacity-90 flex items-center justify-center ${
-                  loading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
-                onClick={handleCheckout}
-                disabled={loading} 
-              >
-                {loading ? (
-                  <div className="flex items-center space-x-2">
-                    <span className="spinner-border animate-spin inline-block w-4 h-4 border-4 rounded-full border-white border-t-transparent"></span>
-                    <span>Processing...</span>
-                  </div>
-                ) : (
-                  "Checkout"
-                )}
-              </button>
-              <p className="text-xl font-bold text-gray-900">
-                Total: ${getTotal().toFixed(2)}
-              </p>
+              </div>
             </div>
-          </ul>
+          </>
         )}
       </div>
     </>
