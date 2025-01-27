@@ -3,6 +3,8 @@ import i1 from '../Images/image 32.png'
 import i2 from '../Images/sofa promotional header.png'
 import i3 from '../Images/promotional page nav.png'
 import Button from "./Button";
+import Link from "next/link";
+
 
 const Hero = () => {
   return (
@@ -30,7 +32,9 @@ const Hero = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Magna in
               est adipiscing in phasellus non in justo.
             </p>
+           <Link href='/shop'>
             <Button text="Shop Now"/>
+            </Link>
           </div>
         </div>
 
