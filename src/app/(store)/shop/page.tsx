@@ -56,7 +56,7 @@ async function Features() {
                 alt={product.name}
                 width={314}
                 height={218}
-                className="w-auto h-auto hover:rounded-xl transition-all ease duration-300"
+                className="w-auto h-auto hover:rounded-xl transition-all ease duration-300 custom-img"
               />
             </div> </Link>
             
