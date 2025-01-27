@@ -39,7 +39,7 @@ const Navbar = () => {
               href="/"
               className="scroll text-lg text-gray-700 flex items-center gap-1 transition ease-in hover:text-color duration-300"
             >
-              Home <FaAngleDown />
+              Home 
             </Link>
           </li>
           <li>
@@ -118,10 +118,7 @@ const Navbar = () => {
           {/* Cart */}
           <button className="relative transition ease-in hover:text-color">
             <Link href="/cart">
-              <FaShoppingCart
-                className="text-xl cursor-pointer lg:hidden block text-black"
-                size={24}
-              />
+              <SearchBar/>
               {cartItemCount > 0 && (
                 <span className="absolute top-0 right-0 text-xs text-white p-2 bg-color rounded-full w-3 h-3 flex items-center justify-center">
                   {cartItemCount}
@@ -156,7 +153,7 @@ const Navbar = () => {
               href="/"
               className="scroll text-lg text-gray-700 flex items-center gap-1 transition ease-in hover:text-color duration-300"
             >
-              Home <FaAngleDown />
+              Home 
             </Link>
           </li>
 
