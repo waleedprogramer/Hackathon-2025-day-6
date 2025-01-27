@@ -113,12 +113,15 @@ const Navbar = () => {
 
         <div className="flex space-x-4 items-center lg:hidden">
           <button className="lg:hidden transition ease-in hover:text-color">
-            <IoSearchOutline size={28} />
+                      <SearchBar/>
           </button>
           {/* Cart */}
           <button className="relative transition ease-in hover:text-color">
             <Link href="/cart">
-              <SearchBar/>
+                <FaShoppingCart
+                className="text-xl cursor-pointer lg:hidden block text-black"
+                size={24}
+              />
               {cartItemCount > 0 && (
                 <span className="absolute top-0 right-0 text-xs text-white p-2 bg-color rounded-full w-3 h-3 flex items-center justify-center">
                   {cartItemCount}
